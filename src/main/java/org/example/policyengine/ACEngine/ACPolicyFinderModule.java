@@ -1,18 +1,11 @@
 package org.example.policyengine.ACEngine;
 
-import com.mongodb.annotations.Beta;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import lombok.Setter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.w3c.dom.Node;
 import org.wso2.balana.*;
 import org.wso2.balana.combine.PolicyCombiningAlgorithm;
