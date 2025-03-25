@@ -1,0 +1,38 @@
+package org.example.policyengine.ACEngine.models;
+
+public class PolicyRequest {
+
+    private String subject;
+    private String action;
+    private String resource;
+
+    public PolicyRequest(String action, String subject, String resource) {
+        this.action = action;
+        this.subject = subject;
+        this.resource = resource;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getResource() {
+        return resource;
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
+}
