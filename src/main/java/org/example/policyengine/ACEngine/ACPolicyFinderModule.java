@@ -5,6 +5,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import lombok.Setter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.Document;
@@ -39,6 +40,7 @@ public class ACPolicyFinderModule extends PolicyFinderModule {
     private Map<URI, AbstractPolicy> policies = new HashMap();
     private PolicyCombiningAlgorithm combiningAlg;
     private static final Log log = LogFactory.getLog(ACPolicyFinderModule.class);
+    private String policyId = null;
 
     @Autowired
     private ACEngineRepository acEngineRepository;
@@ -48,9 +50,10 @@ public class ACPolicyFinderModule extends PolicyFinderModule {
         documentBuilderFactory.setNamespaceAware(true);
         this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
-//        MongoClient mongoClient = MongoClients.create(connectionString);
-//        MongoDatabase database = mongoClient.getDatabase(databaseName);
-//        this.policyCollection = database.getCollection(collectionName);
+    }
+
+    public void setPolicyId(String id){
+        this.policyId = id;
     }
 
     @Override
@@ -64,24 +67,34 @@ public class ACPolicyFinderModule extends PolicyFinderModule {
     public void loadPolicies() {
         this.policies.clear();
 
-        List<org.example.policyengine.ACEngine.models.Policy> policyDb = acEngineRepository.findAll();
+        if (policyId == null) {
+            List<org.example.policyengine.ACEngine.models.Policy> policyDb = acEngineRepository.findAll();
 
-        // Load policies from MongoDB
-        for (org.example.policyengine.ACEngine.models.Policy policyDoc : policyDb) {
-            String policyXml = policyDoc.getPolicy();
-//            System.out.println(policyXml);
-            try {
-                // Parse XML to Node
-                Node policyNode = documentBuilder.parse(
-                        new ByteArrayInputStream(policyXml.getBytes(StandardCharsets.UTF_8))
-                ).getDocumentElement();
+            // Load policies from MongoDB
+            for (org.example.policyengine.ACEngine.models.Policy policyDoc : policyDb) {
+                String policyXml = policyDoc.getPolicy();
 
-                // Create AbstractPolicy from Node
-                AbstractPolicy policy = Policy.getInstance(policyNode);
-                this.policies.put(policy.getId(), policy);
-            } catch (Exception e) {
-                System.err.println("Error loading policy: " + e.getMessage());
+                updatePolicyDB(policyXml);
             }
+        } else {
+            org.example.policyengine.ACEngine.models.Policy p = acEngineRepository.findById(policyId).get();
+            String policyXml = p.getPolicy();
+            updatePolicyDB(policyXml);
+        }
+    }
+
+    public void updatePolicyDB(String policyXml){
+        try {
+            // Parse XML to Node
+            Node policyNode = documentBuilder.parse(
+                    new ByteArrayInputStream(policyXml.getBytes(StandardCharsets.UTF_8))
+            ).getDocumentElement();
+
+            // Create AbstractPolicy from Node
+            AbstractPolicy policy = Policy.getInstance(policyNode);
+            this.policies.put(policy.getId(), policy);
+        } catch (Exception e) {
+            System.err.println("Error loading policy: " + e.getMessage());
         }
     }
 

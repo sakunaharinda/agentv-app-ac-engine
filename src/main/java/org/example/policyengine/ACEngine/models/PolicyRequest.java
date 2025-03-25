@@ -5,15 +5,25 @@ public class PolicyRequest {
     private String subject;
     private String action;
     private String resource;
+    private String policyId;
 
-    public PolicyRequest(String action, String subject, String resource) {
+    public PolicyRequest(String action, String subject, String resource, String policyId) {
         this.action = action;
         this.subject = subject;
         this.resource = resource;
+        this.policyId = policyId;
     }
 
     public String getSubject() {
         return subject;
+    }
+
+    public String getPolicyId() {
+        return policyId;
+    }
+
+    public void setPolicyId(String policyId) {
+        this.policyId = policyId;
     }
 
     public void setSubject(String subject) {

@@ -44,12 +44,36 @@ public class ACEngineService {
         return acEngineRepository.findAll();
     }
 
-    public PolicyResponse getEffect(PolicyRequest request){
+    public PolicyResponse getEffectOne(PolicyRequest request){
 
+        String policyId = request.getPolicyId();
+
+        acPolicyFinderModule.setPolicyId(policyId);
         String xacmlRequest = acPolicyFinderModule.createXACMLRequest(request.getSubject(), request.getAction(), request.getResource());
 
+        PDP pdp = getPDP(acPolicyFinderModule);
+
+        String response = pdp.evaluate(xacmlRequest);
+
+        return serializeResponse(response);
+    }
+
+    public PolicyResponse getEffect(PolicyRequest request){
+
+        acPolicyFinderModule.setPolicyId(null);
+        String xacmlRequest = acPolicyFinderModule.createXACMLRequest(request.getSubject(), request.getAction(), request.getResource());
+
+        PDP pdp = getPDP(acPolicyFinderModule);
+
+        String response = pdp.evaluate(xacmlRequest);
+
+        return serializeResponse(response);
+
+    }
+
+    public PDP getPDP(PolicyFinderModule policyFinderModule){
         Set<PolicyFinderModule> policyFinderModules = new HashSet<>();
-        policyFinderModules.add(acPolicyFinderModule);
+        policyFinderModules.add(policyFinderModule);
 
         PolicyFinder policyFinder = new PolicyFinder();
         policyFinder.setModules(policyFinderModules);
@@ -61,10 +85,7 @@ public class ACEngineService {
                 true
         ));
 
-        String response = pdp.evaluate(xacmlRequest);
-
-        return serializeResponse(response);
-
+        return pdp;
     }
 
     public PolicyResponse serializeResponse(String response){
