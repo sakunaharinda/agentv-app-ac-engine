@@ -165,7 +165,7 @@ public class ACPolicyGenerator {
         int i = 0;
         for (ACR acr : policyRecord.getAcrs()) {
 
-            if (!subjectMap.containsValue(acr.getRuleId())) {
+            if (!subjectMap.containsValue(acr.getSubject())) {
                 subjectMap.put("subject_" + i, acr.getSubject());
                 i+=1;
             }

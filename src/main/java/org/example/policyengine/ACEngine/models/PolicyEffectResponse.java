@@ -1,11 +1,12 @@
 package org.example.policyengine.ACEngine.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PolicyEffectResponse {
 
     private String decision;
-    private List<String> advice;
+    private List<String> advice = new ArrayList<String>();
 
     public PolicyEffectResponse() {}
 
