@@ -24,18 +24,23 @@ public class ACController {
         return acEngineService.getAllPolicies();
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/request")
+    @RequestMapping(method = RequestMethod.POST, value = "/policy/effectAll")
     public PolicyEffectResponse getEffect(@RequestBody PolicyEffectRequest policyRequest) {
         return acEngineService.getEffect(policyRequest);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/requestOne")
+    @RequestMapping(method = RequestMethod.POST, value = "/policy/effect")
     public PolicyEffectResponse getEffectOne(@RequestBody PolicyEffectRequest policyRequest) {
         return acEngineService.getEffectOne(policyRequest);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/add")
+    @RequestMapping(method = RequestMethod.POST, value = "/policy/add")
     public void addPolicy(@RequestBody JSONPolicyRecord policyRecord) throws JAXBException {
         acPolicyService.addPolicy(policyRecord);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/policy/addAll")
+    public void addPolicyAll(@RequestBody List<JSONPolicyRecord> policyRecords) throws JAXBException {
+        acPolicyService.addPolicyAll(policyRecords);
     }
 }
