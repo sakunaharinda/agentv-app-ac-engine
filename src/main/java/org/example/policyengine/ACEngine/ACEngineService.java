@@ -44,6 +44,12 @@ public class ACEngineService {
         return acEngineRepository.findAll();
     }
 
+    public XACMLPolicyRecord getPolicy(String policyId){
+        // TODO: Handle the error when there is no policy to return
+
+        return acEngineRepository.findById(policyId).get();
+    }
+
     public PolicyEffectResponse getEffectOne(PolicyEffectRequest request){
 
         String policyId = request.getPolicyId();

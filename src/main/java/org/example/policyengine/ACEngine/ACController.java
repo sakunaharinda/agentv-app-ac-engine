@@ -24,6 +24,11 @@ public class ACController {
         return acEngineService.getAllPolicies();
     }
 
+    @RequestMapping("/policy/{id}")
+    public XACMLPolicyRecord getPolicy(@PathVariable String id) {
+        return acEngineService.getPolicy(id);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/policy/effectAll")
     public PolicyEffectResponse getEffect(@RequestBody PolicyEffectRequest policyRequest) {
         return acEngineService.getEffect(policyRequest);
