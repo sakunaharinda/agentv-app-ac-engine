@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Policy">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Description" type="xs:string" />
+                <xs:element name="Target">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="AnyOf">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="AllOf">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element maxOccurs="unbounded" name="Match">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="AttributeValue">
+                                                                    <xs:complexType>
+                                                                        <xs:simpleContent>
+                                                                            <xs:extension base="xs:string">
+                                                                                <xs:attribute name="DataType" type="xs:string" use="required" />
+                                                                            </xs:extension>
+                                                                        </xs:simpleContent>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element name="AttributeDesignator">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="Category" type="xs:string" use="required" />
+                                                                        <xs:attribute name="AttributeId" type="xs:string" use="required" />
+                                                                        <xs:attribute name="DataType" type="xs:string" use="required" />
+                                                                        <xs:attribute name="MustBePresent" type="xs:boolean" use="required" />
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                            <xs:attribute name="MatchId" type="xs:string" use="required" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element maxOccurs="unbounded" name="Rule">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Description" type="xs:string" />
+                            <xs:element minOccurs="0" name="Target">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="AnyOf">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element maxOccurs="unbounded" name="AllOf">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element maxOccurs="unbounded" name="Match">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element name="AttributeValue">
+                                                                                <xs:complexType>
+                                                                                    <xs:simpleContent>
+                                                                                        <xs:extension base="xs:string">
+                                                                                            <xs:attribute name="DataType" type="xs:string" use="required" />
+                                                                                        </xs:extension>
+                                                                                    </xs:simpleContent>
+                                                                                </xs:complexType>
+                                                                            </xs:element>
+                                                                            <xs:element name="AttributeDesignator">
+                                                                                <xs:complexType>
+                                                                                    <xs:attribute name="Category" type="xs:string" use="required" />
+                                                                                    <xs:attribute name="AttributeId" type="xs:string" use="required" />
+                                                                                    <xs:attribute name="DataType" type="xs:string" use="required" />
+                                                                                    <xs:attribute name="MustBePresent" type="xs:boolean" use="required" />
+                                                                                </xs:complexType>
+                                                                            </xs:element>
+                                                                        </xs:sequence>
+                                                                        <xs:attribute name="MatchId" type="xs:string" use="required" />
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="AdviceExpressions">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="AdviceExpression">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="AttributeAssignmentExpression">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="AttributeValue">
+                                                                    <xs:complexType>
+                                                                        <xs:simpleContent>
+                                                                            <xs:extension base="xs:string">
+                                                                                <xs:attribute name="DataType" type="xs:string" use="required" />
+                                                                            </xs:extension>
+                                                                        </xs:simpleContent>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                            <xs:attribute name="AttributeId" type="xs:string" use="required" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="AdviceId" type="xs:string" use="required" />
+                                                <xs:attribute name="AppliesTo" type="xs:string" use="required" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="RuleId" type="xs:string" use="required" />
+                        <xs:attribute name="Effect" type="xs:string" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="PolicyId" type="xs:string" use="required" />
+            <xs:attribute name="RuleCombiningAlgId" type="xs:string" use="required" />
+            <xs:attribute name="Version" type="xs:decimal" use="required" />
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

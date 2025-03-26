@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.Document;
+import org.example.policyengine.ACEngine.models.XACMLPolicyRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
@@ -61,16 +62,16 @@ public class ACPolicyFinderModule extends PolicyFinderModule {
         this.policies.clear();
 
         if (policyId == null) {
-            List<org.example.policyengine.ACEngine.models.Policy> policyDb = acEngineRepository.findAll();
+            List<XACMLPolicyRecord> policyDb = acEngineRepository.findAll();
 
             // Load policies from MongoDB
-            for (org.example.policyengine.ACEngine.models.Policy policyDoc : policyDb) {
+            for (XACMLPolicyRecord policyDoc : policyDb) {
                 String policyXml = policyDoc.getPolicy();
 
                 updatePolicyDB(policyXml);
             }
         } else {
-            org.example.policyengine.ACEngine.models.Policy p = acEngineRepository.findById(policyId).get();
+            XACMLPolicyRecord p = acEngineRepository.findById(policyId).get();
             String policyXml = p.getPolicy();
             updatePolicyDB(policyXml);
         }

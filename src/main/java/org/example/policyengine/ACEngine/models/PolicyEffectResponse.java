@@ -1,20 +1,15 @@
 package org.example.policyengine.ACEngine.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.List;
 
-public class PolicyResponse {
+public class PolicyEffectResponse {
 
     private String decision;
     private List<String> advice;
 
-    public PolicyResponse() {}
+    public PolicyEffectResponse() {}
 
-    public PolicyResponse(String decision, List<String> advice) {
+    public PolicyEffectResponse(String decision, List<String> advice) {
         this.decision = decision;
         this.advice = advice;
     }

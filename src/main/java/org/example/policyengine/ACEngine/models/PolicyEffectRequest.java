@@ -1,13 +1,13 @@
 package org.example.policyengine.ACEngine.models;
 
-public class PolicyRequest {
+public class PolicyEffectRequest {
 
     private String subject;
     private String action;
     private String resource;
     private String policyId;
 
-    public PolicyRequest(String action, String subject, String resource, String policyId) {
+    public PolicyEffectRequest(String action, String subject, String resource, String policyId) {
         this.action = action;
         this.subject = subject;
         this.resource = resource;

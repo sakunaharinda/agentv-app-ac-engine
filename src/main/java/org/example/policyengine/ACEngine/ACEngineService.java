@@ -1,8 +1,8 @@
 package org.example.policyengine.ACEngine;
 
-import org.example.policyengine.ACEngine.models.Policy;
-import org.example.policyengine.ACEngine.models.PolicyRequest;
-import org.example.policyengine.ACEngine.models.PolicyResponse;
+import org.example.policyengine.ACEngine.models.XACMLPolicyRecord;
+import org.example.policyengine.ACEngine.models.PolicyEffectRequest;
+import org.example.policyengine.ACEngine.models.PolicyEffectResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -40,11 +40,11 @@ public class ACEngineService {
 
     }
 
-    public List<Policy> getAllPolicies(){
+    public List<XACMLPolicyRecord> getAllPolicies(){
         return acEngineRepository.findAll();
     }
 
-    public PolicyResponse getEffectOne(PolicyRequest request){
+    public PolicyEffectResponse getEffectOne(PolicyEffectRequest request){
 
         String policyId = request.getPolicyId();
 
@@ -58,7 +58,7 @@ public class ACEngineService {
         return serializeResponse(response);
     }
 
-    public PolicyResponse getEffect(PolicyRequest request){
+    public PolicyEffectResponse getEffect(PolicyEffectRequest request){
 
         acPolicyFinderModule.setPolicyId(null);
         String xacmlRequest = acPolicyFinderModule.createXACMLRequest(request.getSubject(), request.getAction(), request.getResource());
@@ -88,9 +88,9 @@ public class ACEngineService {
         return pdp;
     }
 
-    public PolicyResponse serializeResponse(String response){
+    public PolicyEffectResponse serializeResponse(String response){
 
-        PolicyResponse policyResponse = new PolicyResponse();
+        PolicyEffectResponse policyResponse = new PolicyEffectResponse();
 
         try {
             ResponseCtx responseCtx = ResponseCtx.getInstance(getXacmlResponse(response));
