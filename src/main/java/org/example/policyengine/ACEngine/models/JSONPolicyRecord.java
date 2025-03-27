@@ -6,12 +6,12 @@ public class JSONPolicyRecord {
 
     private String policyId;
     private String policyDescription;
-    private List<ACR> acrs;
+    private List<ACR> policy;
 
-    public JSONPolicyRecord(String policyId, String policyDescription, List<ACR> acrs) {
+    public JSONPolicyRecord(String policyId, String policyDescription, List<ACR> policy) {
         this.policyId = policyId;
         this.policyDescription = policyDescription;
-        this.acrs = acrs;
+        this.policy = policy;
     }
 
     public String getPolicyId() {
@@ -30,11 +30,11 @@ public class JSONPolicyRecord {
         this.policyDescription = policyDescription;
     }
 
-    public List<ACR> getAcrs() {
-        return acrs;
+    public List<ACR> getPolicy() {
+        return policy;
     }
 
-    public void setAcrs(List<ACR> acrs) {
-        this.acrs = acrs;
+    public void setPolicy(List<ACR> policy) {
+        this.policy = policy;
     }
 }

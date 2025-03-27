@@ -163,7 +163,7 @@ public class ACPolicyGenerator {
 
         HashMap<String, String> subjectMap = new HashMap<>();
         int i = 0;
-        for (ACR acr : policyRecord.getAcrs()) {
+        for (ACR acr : policyRecord.getPolicy()) {
 
             if (!subjectMap.containsValue(acr.getSubject())) {
                 subjectMap.put("subject_" + i, acr.getSubject());
