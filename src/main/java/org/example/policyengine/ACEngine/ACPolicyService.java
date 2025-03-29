@@ -41,4 +41,8 @@ public class ACPolicyService {
 
     }
 
+    public void deletePolicy(String id) {
+        acEngineRepository.deleteById(id);
+    }
+
 }
