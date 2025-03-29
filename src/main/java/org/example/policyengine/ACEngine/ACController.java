@@ -48,4 +48,9 @@ public class ACController {
     public void addPolicyAll(@RequestBody List<JSONPolicyRecord> policyRecords) throws JAXBException {
         acPolicyService.addPolicyAll(policyRecords);
     }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/policy/{id}")
+    public void deletePolicy(@PathVariable String id) {
+        acPolicyService.deletePolicy(id);
+    }
 }
