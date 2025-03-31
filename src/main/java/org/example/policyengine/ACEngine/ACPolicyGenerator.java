@@ -43,13 +43,15 @@ public class ACPolicyGenerator {
 
         Policy.Target target = objectFactory.createPolicyTarget();
         List<Policy.Target.AnyOf> anyOfs = new ArrayList<>();
+        Policy.Target.AnyOf anyOf = new Policy.Target.AnyOf();
+        Policy.Target.AnyOf.AllOf allOf = new Policy.Target.AnyOf.AllOf();
+        List<Policy.Target.AnyOf.AllOf> allOfs = new ArrayList<>();
+        List<Policy.Target.AnyOf.AllOf.Match> allOfMatches = new ArrayList<>();
 
         for (Map.Entry<String, String> entry : entityMap.entrySet()) {
             if (entry.getKey().equals("decision") || entry.getKey().equals("purpose") || entry.getKey().equals("condition") || entry.getKey().equals("ruleId") || entry.getKey().equals("ruleDescription")) {
                 continue;
             }
-            Policy.Target.AnyOf anyOf = new Policy.Target.AnyOf();
-            Policy.Target.AnyOf.AllOf allOf = new Policy.Target.AnyOf.AllOf();
             Policy.Target.AnyOf.AllOf.Match match = new Policy.Target.AnyOf.AllOf.Match();
 
             Policy.Target.AnyOf.AllOf.Match.AttributeValue attributeValue = new Policy.Target.AnyOf.AllOf.Match.AttributeValue();
@@ -60,7 +62,7 @@ public class ACPolicyGenerator {
             attributeDesignator.setMustBePresent(true);
             attributeDesignator.setDataType(dataType);
 
-            if (entry.getKey().matches("subject_.*") || entry.getKey().equals("subject")){
+            if (entry.getKey().matches("subject")){
                 attributeDesignator.setCategory(subjectCategory);
                 attributeDesignator.setAttributeId(subjectId);
             } else if (entry.getKey().equals("action")){
@@ -72,14 +74,13 @@ public class ACPolicyGenerator {
             }
             match.setAttributeDesignator(attributeDesignator);
             match.setMatchId(matchId);
-            List<Policy.Target.AnyOf.AllOf.Match> allOfMatches = new ArrayList<>();
             allOfMatches.add(match);
-            allOf.setMatch(allOfMatches);
-            List<Policy.Target.AnyOf.AllOf> allOfs = new ArrayList<>();
-            allOfs.add(allOf);
-            anyOf.setAllOf(allOfs);
-            anyOfs.add(anyOf);
         }
+
+        allOf.setMatch(allOfMatches);
+        allOfs.add(allOf);
+        anyOf.setAllOf(allOfs);
+        anyOfs.add(anyOf);
 
         target.setAnyOf(anyOfs);
 
@@ -149,6 +150,15 @@ public class ACPolicyGenerator {
         return rule;
     }
 
+    public Policy.Rule getDefaultRule(){
+        Policy.Rule rule = objectFactory.createPolicyRule();
+        rule.setDescription("Default deny rule");
+        rule.setEffect(Effect.DENY.getEffect());
+        rule.setRuleId("default-deny");
+
+        return rule;
+    }
+
     public String getStringPolicy(Policy policy) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(Policy.class);
         Marshaller mar= context.createMarshaller();
@@ -173,7 +183,6 @@ public class ACPolicyGenerator {
             Policy.Rule rule = getRule(acr);
 
             rules.add(rule);
-
         }
 
         Policy policy = new Policy();
