@@ -1,5 +1,6 @@
 package org.example.policyengine.ACEngine;
 
+import org.example.policyengine.ACEngine.enums.Mode;
 import org.example.policyengine.ACEngine.models.XACMLPolicyRecord;
 import org.example.policyengine.ACEngine.models.PolicyEffectRequest;
 import org.example.policyengine.ACEngine.models.PolicyEffectResponse;
@@ -61,7 +62,7 @@ public class ACEngineService {
 
         String response = pdp.evaluate(xacmlRequest);
 
-        return serializeResponse(response);
+        return serializeResponse(response, Mode.SINGLE);
     }
 
     public PolicyEffectResponse getEffect(PolicyEffectRequest request){
@@ -73,7 +74,7 @@ public class ACEngineService {
 
         String response = pdp.evaluate(xacmlRequest);
 
-        return serializeResponse(response);
+        return serializeResponse(response, Mode.OVERALL);
 
     }
 
@@ -94,7 +95,7 @@ public class ACEngineService {
         return pdp;
     }
 
-    public PolicyEffectResponse serializeResponse(String response){
+    public PolicyEffectResponse serializeResponse(String response, Mode mode){
 
         PolicyEffectResponse policyResponse = new PolicyEffectResponse();
 
@@ -103,9 +104,7 @@ public class ACEngineService {
             AbstractResult result  = responseCtx.getResults().iterator().next();
             if(AbstractResult.DECISION_PERMIT == result.getDecision()){
                 policyResponse.setDecision("permit");
-            } else if (AbstractResult.DECISION_NOT_APPLICABLE == result.getDecision()) {
-                policyResponse.setDecision("not_applicable");
-            } else {
+            } else if (AbstractResult.DECISION_DENY == result.getDecision()) {
                 policyResponse.setDecision("deny");
                 List<Advice> advices = result.getAdvices();
                 List<String> responseAdvices = new ArrayList<>();
@@ -116,6 +115,15 @@ public class ACEngineService {
                     }
                 }
                 policyResponse.setAdvice(responseAdvices);
+            } else {
+
+                if (mode == Mode.SINGLE){
+                    policyResponse.setDecision("not_applicable");
+                } else if (mode == Mode.OVERALL) {
+                    // Handling default deny
+                    policyResponse.setDecision("deny");
+                }
+
             }
 
         } catch (ParsingException e) {
