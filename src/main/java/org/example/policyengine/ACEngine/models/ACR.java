@@ -8,12 +8,12 @@ public class ACR {
     private String subject;
     private String action;
     private String resource;
-    private String condition;
+    private Expression condition;
     private String purpose;
     private String ruleId = "";
     private String ruleDescription = "";
 
-    public ACR(String decision, String subject, String action, String resource, String condition, String purpose) {
+    public ACR(String decision, String subject, String action, String resource, Expression condition, String purpose) {
         UUID uuid = UUID.randomUUID();
 
         this.decision = decision;
@@ -74,11 +74,11 @@ public class ACR {
         this.resource = resource;
     }
 
-    public String getCondition() {
+    public Expression getCondition() {
         return condition;
     }
 
-    public void setCondition(String condition) {
+    public void setCondition(Expression condition) {
         this.condition = condition;
     }
 

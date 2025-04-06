@@ -31,6 +31,8 @@ public class ACPolicyGenerator {
     private static final String resourceCategory = "urn:oasis:names:tc:xacml:3.0:attribute-category:resource";
     private static final String resourceId = "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
 
+    private static final String conditionCategory = "urn:oasis:names:tc:xacml:3.0:attribute-category:";
+
     private static ObjectFactory objectFactory;
     private static ObjectMapper objectMapper;
 
@@ -39,7 +41,7 @@ public class ACPolicyGenerator {
         objectMapper = new ObjectMapper();
     }
 
-    public Policy.Target getRuleTarget(HashMap<String, String> entityMap){
+    public Policy.Target getRuleTarget(HashMap<String, ?> entityMap){
 
         Policy.Target target = objectFactory.createPolicyTarget();
         List<Policy.Target.AnyOf> anyOfs = new ArrayList<>();
@@ -48,33 +50,63 @@ public class ACPolicyGenerator {
         List<Policy.Target.AnyOf.AllOf> allOfs = new ArrayList<>();
         List<Policy.Target.AnyOf.AllOf.Match> allOfMatches = new ArrayList<>();
 
-        for (Map.Entry<String, String> entry : entityMap.entrySet()) {
-            if (entry.getKey().equals("decision") || entry.getKey().equals("purpose") || entry.getKey().equals("condition") || entry.getKey().equals("ruleId") || entry.getKey().equals("ruleDescription")) {
+        for (Map.Entry<String, ?> entry : entityMap.entrySet()) {
+            if (entry.getKey().equals("decision") || entry.getKey().equals("purpose") || entry.getKey().equals("ruleId") || entry.getKey().equals("ruleDescription")) {
                 continue;
             }
             Policy.Target.AnyOf.AllOf.Match match = new Policy.Target.AnyOf.AllOf.Match();
 
             Policy.Target.AnyOf.AllOf.Match.AttributeValue attributeValue = new Policy.Target.AnyOf.AllOf.Match.AttributeValue();
-            attributeValue.setDataType(dataType);
-            attributeValue.setValue(entry.getValue());
-            match.setAttributeValue(attributeValue);
+
             Policy.Target.AnyOf.AllOf.Match.AttributeDesignator attributeDesignator = new Policy.Target.AnyOf.AllOf.Match.AttributeDesignator();
-            attributeDesignator.setMustBePresent(true);
-            attributeDesignator.setDataType(dataType);
 
             if (entry.getKey().matches("subject")){
+                attributeDesignator.setMustBePresent(true);
+                attributeDesignator.setDataType(dataType);
                 attributeDesignator.setCategory(subjectCategory);
                 attributeDesignator.setAttributeId(subjectId);
+                attributeValue.setDataType(dataType);
+                attributeValue.setValue(entry.getValue().toString());
+                match.setAttributeValue(attributeValue);
+                match.setAttributeDesignator(attributeDesignator);
+                match.setMatchId(matchId);
+                allOfMatches.add(match);
             } else if (entry.getKey().equals("action")){
+                attributeDesignator.setMustBePresent(true);
+                attributeDesignator.setDataType(dataType);
                 attributeDesignator.setCategory(actionCategory);
                 attributeDesignator.setAttributeId(actionId);
+                attributeValue.setDataType(dataType);
+                attributeValue.setValue(entry.getValue().toString());
+                match.setAttributeValue(attributeValue);
+                match.setAttributeDesignator(attributeDesignator);
+                match.setMatchId(matchId);
+                allOfMatches.add(match);
             } else if (entry.getKey().equals("resource")){
+                attributeDesignator.setMustBePresent(true);
+                attributeDesignator.setDataType(dataType);
                 attributeDesignator.setCategory(resourceCategory);
                 attributeDesignator.setAttributeId(resourceId);
+                attributeValue.setDataType(dataType);
+                attributeValue.setValue(entry.getValue().toString());
+                match.setAttributeValue(attributeValue);
+                match.setAttributeDesignator(attributeDesignator);
+                match.setMatchId(matchId);
+                allOfMatches.add(match);
+            } else if (entry.getKey().equals("condition") && entry.getValue() != null){
+                attributeDesignator.setMustBePresent(true);
+                attributeDesignator.setDataType(dataType);
+                HashMap<String, String> conditionMap = (HashMap<String, String>) entry.getValue();
+                attributeDesignator.setCategory(conditionCategory+conditionMap.get("left"));
+                attributeDesignator.setAttributeId(conditionMap.get("left"));
+                attributeValue.setDataType(dataType);
+                attributeValue.setValue(conditionMap.get("right"));
+                match.setAttributeValue(attributeValue);
+                match.setAttributeDesignator(attributeDesignator);
+                match.setMatchId(matchId);
+                allOfMatches.add(match);
             }
-            match.setAttributeDesignator(attributeDesignator);
-            match.setMatchId(matchId);
-            allOfMatches.add(match);
+
         }
 
         allOf.setMatch(allOfMatches);
@@ -163,6 +195,7 @@ public class ACPolicyGenerator {
         JAXBContext context = JAXBContext.newInstance(Policy.class);
         Marshaller mar= context.createMarshaller();
         mar.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        mar.marshal(policy, new File("policies/test_policy.xml"));
         StringWriter sw = new StringWriter();
         mar.marshal(policy, sw);
         return sw.toString();

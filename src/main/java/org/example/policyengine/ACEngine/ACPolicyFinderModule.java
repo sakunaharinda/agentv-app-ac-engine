@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.Document;
+import org.example.policyengine.ACEngine.models.Expression;
 import org.example.policyengine.ACEngine.models.XACMLPolicyRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -157,26 +158,5 @@ public class ACPolicyFinderModule extends PolicyFinderModule {
 
     public boolean isRequestSupported() {
         return true;
-    }
-
-    public String createXACMLRequest(String subject, String action, String resource){
-
-        return "<Request xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" CombinedDecision=\"false\" ReturnPolicyIdList=\"false\">\n" +
-                "<Attributes Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\">\n" +
-                "<Attribute AttributeId=\"urn:oasis:names:tc:xacml:1.0:action:action-id\" IncludeInResult=\"false\">\n" +
-                "<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" + action + "</AttributeValue>\n" +
-                "</Attribute>\n" +
-                "</Attributes>\n" +
-                "<Attributes Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\">\n" +
-                "<Attribute AttributeId=\"urn:oasis:names:tc:xacml:1.0:subject:subject-id\" IncludeInResult=\"false\">\n" +
-                "<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" + subject +"</AttributeValue>\n" +
-                "</Attribute>\n" +
-                "</Attributes>\n" +
-                "<Attributes Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n" +
-                "<Attribute AttributeId=\"urn:oasis:names:tc:xacml:1.0:resource:resource-id\" IncludeInResult=\"false\">\n" +
-                "<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" + resource + "</AttributeValue>\n" +
-                "</Attribute>\n" +
-                "</Attributes>\n" +
-                "</Request>";
     }
 }

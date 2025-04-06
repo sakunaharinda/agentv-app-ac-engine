@@ -1,6 +1,7 @@
 package org.example.policyengine.ACEngine;
 
 import org.example.policyengine.ACEngine.enums.Mode;
+import org.example.policyengine.ACEngine.models.Expression;
 import org.example.policyengine.ACEngine.models.XACMLPolicyRecord;
 import org.example.policyengine.ACEngine.models.PolicyEffectRequest;
 import org.example.policyengine.ACEngine.models.PolicyEffectResponse;
@@ -56,7 +57,7 @@ public class ACEngineService {
         String policyId = request.getPolicyId();
 
         acPolicyFinderModule.setPolicyId(policyId);
-        String xacmlRequest = acPolicyFinderModule.createXACMLRequest(request.getSubject(), request.getAction(), request.getResource());
+        String xacmlRequest = createXACMLRequest(request.getSubject(), request.getAction(), request.getResource(), request.getCondition());
 
         PDP pdp = getPDP(acPolicyFinderModule);
 
@@ -68,7 +69,7 @@ public class ACEngineService {
     public PolicyEffectResponse getEffect(PolicyEffectRequest request){
 
         acPolicyFinderModule.setPolicyId(null);
-        String xacmlRequest = acPolicyFinderModule.createXACMLRequest(request.getSubject(), request.getAction(), request.getResource());
+        String xacmlRequest = createXACMLRequest(request.getSubject(), request.getAction(), request.getResource(), request.getCondition());
 
         PDP pdp = getPDP(acPolicyFinderModule);
 
@@ -96,7 +97,7 @@ public class ACEngineService {
     }
 
     public PolicyEffectResponse serializeResponse(String response, Mode mode){
-
+        System.out.println(response);
         PolicyEffectResponse policyResponse = new PolicyEffectResponse();
 
         try {
@@ -158,5 +159,32 @@ public class ACEngineService {
         return doc.getDocumentElement();
     }
 
-
+    public String createXACMLRequest(String subject, String action, String resource, Expression condition){
+        String conditionString = "";
+        if (condition!=null){
+            conditionString = "<Attributes Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:" + condition.getLeft() + "\">\n" +
+                    "<Attribute AttributeId=\"" + condition.getLeft() + "\" IncludeInResult=\"false\">\n" +
+                    "<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" + condition.getRight() + "</AttributeValue>\n" +
+                    "</Attribute>\n" +
+                    "</Attributes>\n";
+        }
+        return "<Request xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" CombinedDecision=\"false\" ReturnPolicyIdList=\"false\">\n" +
+                "<Attributes Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:action\">\n" +
+                "<Attribute AttributeId=\"urn:oasis:names:tc:xacml:1.0:action:action-id\" IncludeInResult=\"false\">\n" +
+                "<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" + action + "</AttributeValue>\n" +
+                "</Attribute>\n" +
+                "</Attributes>\n" +
+                "<Attributes Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\">\n" +
+                "<Attribute AttributeId=\"urn:oasis:names:tc:xacml:1.0:subject:subject-id\" IncludeInResult=\"true\">\n" +
+                "<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" + subject +"</AttributeValue>\n" +
+                "</Attribute>\n" +
+                "</Attributes>\n" +
+                "<Attributes Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n" +
+                "<Attribute AttributeId=\"urn:oasis:names:tc:xacml:1.0:resource:resource-id\" IncludeInResult=\"false\">\n" +
+                "<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" + resource + "</AttributeValue>\n" +
+                "</Attribute>\n" +
+                "</Attributes>\n" +
+                conditionString +
+                "</Request>";
+    }
 }
