@@ -49,6 +49,11 @@ public class ACController {
         acPolicyService.addPolicyAll(policyRecords);
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/policy/add/xacml")
+    public void addPolicyXACML(@RequestBody XACMLPolicyRecord policyRecord) throws JAXBException {
+        acPolicyService.addPolicyXACML(policyRecord);
+    }
+
     @RequestMapping(method = RequestMethod.DELETE, value = "/policy/{id}")
     public void deletePolicy(@PathVariable String id) {
         acPolicyService.deletePolicy(id);
