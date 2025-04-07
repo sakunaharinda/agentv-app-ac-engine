@@ -29,6 +29,10 @@ public class ACPolicyService {
 
     }
 
+    public void addPolicyXACML(XACMLPolicyRecord xacmlPolicyRecord) throws JAXBException {
+        acEngineRepository.save(xacmlPolicyRecord);
+    }
+
     public void addPolicyAll(List<JSONPolicyRecord> jsonPolicyRecords) throws JAXBException {
 
         List<XACMLPolicyRecord> xacmlPolicyRecords = new ArrayList<>();
