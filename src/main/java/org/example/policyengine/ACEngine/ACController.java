@@ -1,10 +1,7 @@
 package org.example.policyengine.ACEngine;
 
 import jakarta.xml.bind.JAXBException;
-import org.example.policyengine.ACEngine.models.JSONPolicyRecord;
-import org.example.policyengine.ACEngine.models.XACMLPolicyRecord;
-import org.example.policyengine.ACEngine.models.PolicyEffectRequest;
-import org.example.policyengine.ACEngine.models.PolicyEffectResponse;
+import org.example.policyengine.ACEngine.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,9 +41,19 @@ public class ACController {
         acPolicyService.addPolicy(policyRecord);
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/policy/add/json")
+    public void addPDPPolicy(@RequestBody PDPPolicyRecord policyRecord) throws JAXBException {
+        acPolicyService.addPDPPolicy(policyRecord);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/policy/addAll")
     public void addPolicyAll(@RequestBody List<JSONPolicyRecord> policyRecords) throws JAXBException {
         acPolicyService.addPolicyAll(policyRecords);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/policy/addAll/json")
+    public void addPDPPolicyAll(@RequestBody List<PDPPolicyRecord> policyRecords) throws JAXBException {
+        acPolicyService.addPDPPolicyAll(policyRecords);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/policy/add/xacml")
@@ -57,5 +64,15 @@ public class ACController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/policy/{id}")
     public void deletePolicy(@PathVariable String id) {
         acPolicyService.deletePolicy(id);
+    }
+
+    @RequestMapping("/policy/published")
+    public List<PDPPolicyRecord> getPublishedPolicy() {
+        return acPolicyService.getPublishedPolicies();
+    }
+
+    @RequestMapping("/policy/json")
+    public List<PDPPolicyRecord> getAllPDPPolicies() {
+        return acPolicyService.getAllPDPPolicies();
     }
 }
